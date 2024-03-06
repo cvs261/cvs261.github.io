@@ -82,3 +82,23 @@ terminalContainer.addEventListener('scroll', () => {
 
   isTerminalAutoScrolling = (scrollTopOffset < terminalContainer.scrollTop);
 });
+
+//const terminal = new BluetoothTerminal();
+
+// Override `receive` method to log incoming data to the terminal and check for map links.
+terminal.receive = function(data) {
+  logToTerminal(data, 'in');
+
+  // Verifică dacă datele conțin un link către Google Maps
+  if (data.startsWith('https://www.google.com/maps?q=')) {
+    updateMapIframe(data); // Actualizează harta dacă link-ul este detectat
+  }
+};
+
+function updateMapIframe(link) {
+  // Găsește elementul iframe prin ID
+  var iframe = document.getElementById('mapIframe');
+
+  // Actualizează atributul 'src' cu noul link
+  iframe.src = link;
+}
