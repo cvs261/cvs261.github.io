@@ -10,7 +10,11 @@ let readBuffer = '';
 
 // Connect to the device on Connect button click
 connectButton.addEventListener('click', function() {
-    connect();
+    connect().then(() => {
+        console.log('Connection successful');
+    }).catch(error => {
+        console.error('Connection failed', error);
+    });
 });
 
 // Disconnect from the device on Disconnect button click
@@ -28,9 +32,9 @@ sendForm.addEventListener('submit', function(event) {
 
 // Launch Bluetooth device chooser and connect to the selected
 function connect() {
-    return (deviceCache? Promise.resolve(deviceCache): requestBluetoothDevice()).
-    then(device => connectDeviceAndCacheCharacteristic(device)).
-    then(characteristic => startNotifications(characteristic));//.catch(error => log(error));
+    return (deviceCache ? Promise.resolve(deviceCache): requestBluetoothDevice()).
+        then(device => connectDeviceAndCacheCharacteristic(device)).
+        then(characteristic => startNotifications(characteristic)).catch(error => log(error));
 }
 
 function requestBluetoothDevice(){
@@ -97,11 +101,11 @@ function log(data, type=''){
 
 // Disconnect from the connected device
 function disconnect() {
-    if(deviceCahce){
+    if(deviceCache){
         log('Disconnecting from"' + deviceCache.name + '" bluetooth device...');
         deviceCache.removeEventListener('gattserverdisconnected', handleDisconnection);
 
-        if(deviceCahce.gatt.connected){
+        if(deviceCache.gatt.connected){
             deviceCache.gatt.disconnect();
             log('"'+ deviceCache.name + '" bluetooth dvice disconnected');
         }
