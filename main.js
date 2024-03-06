@@ -68,7 +68,7 @@ function connectDeviceAndCacheCharacteristic(device){
     then(server =>{log('GATT server connected, getting service...');
         return server.getPrimaryService(0xFFE0);
     }).
-    then(service =>{log('Serive found, getting characteristic...')
+    then(service =>{log('Service found, getting characteristic...')
         return service.getCharacteristic(0xFFE1);
     }).
     then(characteristic => {
@@ -86,7 +86,7 @@ function startNotifications(characterstic){
     return characteristic.startNotifications().
     then(() => {
         log('Notifications started');
-        characterstic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+        //characterstic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
     });
 }
 
