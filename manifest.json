@@ -3,7 +3,7 @@
   "lang": "en",
   "display": "standalone",
   "orientation": "any",
-  "start_url": "./",
+  "start_url": "cvs261.github.io",
   "scope": "./",
   "name": "cvs261.github.io",
   "short_name": "Web Terminal",
