@@ -31,7 +31,7 @@ sendForm.addEventListener('submit', function(event) {
 function connect() {
     return (deviceCache? Promise.resolve(deviceCache): requestBluetoothDevice()).
     then(device => connectDeviceAndCacheCharacteristic(device)).
-    then(characteristic => startNotifications(characteristic)).catch(error => log(error));
+    then(characteristic => startNotifications(characteristic));//.catch(error => log(error));
 }
 
 function requestBluetoothDevice(){
