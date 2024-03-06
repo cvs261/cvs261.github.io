@@ -7,6 +7,7 @@ let inputField = document.getElementById('input');
 let deviceCache = null;
 let characteristicCache = null;
 let readBuffer = '';
+const characteristic = null;
 
 // Connect to the device on Connect button click
 connectButton.addEventListener('click', function() {
@@ -86,7 +87,7 @@ function startNotifications(characterstic){
     return characteristic.startNotifications().
     then(() => {
         log('Notifications started');
-        //characterstic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+        characterstic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
     });
 }
 
