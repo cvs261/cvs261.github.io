@@ -1,0 +1,9 @@
+{
+  "name": "cvs261.github.io",
+  "version": "1.0.0",
+  "dependencies": {
+  },
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
