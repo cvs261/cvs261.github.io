@@ -14,10 +14,10 @@
 	limitations under the License.
 */
 (function() {
-    'use strict';
-    var workerScript = document.currentScript && document.currentScript.dataset.serviceWorker;
+  'use strict';
+  var workerScript = document.currentScript && document.currentScript.dataset.serviceWorker;
 
-    if (workerScript && 'serviceWorker' in navigator) {
-        navigator.serviceWorker.register(workerScript);
-    }
+  if (workerScript && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register(workerScript);
+  }
 })();
