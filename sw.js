@@ -1,11 +1,11 @@
-importScripts('js/sw-toolbox.js');
+importScripts('sw-toolbox.js');
 
 toolbox.precache([
-  'css/normalize.css',
-  'css/styles.css',
-  'js/BluetoothConnection.js',
-  'js/companion.js',
-  'js/main.js',
+  'normalize.css',
+  'styles.css',
+  'BluetoothConnection.js',
+  'companion.js',
+  'main.js',
   'index.html',
 ]);
 
