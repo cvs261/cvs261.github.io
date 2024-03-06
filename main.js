@@ -155,8 +155,8 @@ function send(data) {
 
     data += '\n';
 
-    if (data.length > 20) {
-        let chunks = data.match(/(.|[\r\n]){1,20}/g);
+    if (data.length > 60) {
+        let chunks = data.match(/(.|[\r\n]){1,60}/g);
 
         writeToCharacteristic(characteristicCache, chunks[0]);
 
