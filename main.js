@@ -58,7 +58,7 @@ function handleDisconnection(event){
     log('"' + device.name + '"bluetooth device disconnected, trying to reconnect...');
 
     connectDeviceAndCacheCharacteristic(device).
-    then(characteristic => startNotifications(characteristic)).catch(error => log(error));
+        then(characteristic => startNotifications(characteristicCache)) // Pasează 'characteristicCache' către 'startNotifications'
 }
 
 // Connect to the device specifed, get service and characteristic
@@ -76,22 +76,26 @@ function connectDeviceAndCacheCharacteristic(device){
         return service.getCharacteristic(0xFFE1);
     }).
     then(characteristic => {
-        log('Characteristic found');
-        characteristicCache = characteristic;
-
-        return characteristicCache;
+            log('Characteristic found');
+            characteristicCache = characteristic; // Salvează caracteristica în cache
+            return startNotifications(characteristicCache); // Pasează 'characteristicCache' către 'startNotifications'
     });
 }
 
 // Enable the characteristic changes notification
-function startNotifications(characteristicCache){
+function startNotifications(characteristic) { // Folosește 'characteristic' ca parametru
+    if (!characteristic) { // Verifică dacă 'characteristic' este definit
+        log('Characteristic is not defined.', 'error');
+        return Promise.reject('Characteristic is not defined.'); // Returnează o promisiune respinsă pentru a gestiona eroarea
+    }
+
     log('Starting notifications...');
 
-    return characteristicCache.startNotifications().
-    then(() => {
-        log('Notifications started');
-        characteristicCache.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
-    });
+    return characteristic.startNotifications()
+        .then(() => {
+            log('Notifications started');
+            characteristic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+        });
 }
 
 function log(data, type=''){
