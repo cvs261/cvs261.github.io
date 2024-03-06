@@ -6,6 +6,7 @@ let sendForm = document.getElementById('send-form');
 let inputField = document.getElementById('input');
 let deviceCache = null;
 let characteristicCache = null;
+let readBuffer = '';
 
 // Connect to the device on Connect button click
 connectButton.addEventListener('click', function() {
@@ -41,8 +42,19 @@ function requestBluetoothDevice(){
         log('"' + device.name + '"bluetooth device selected');
         deviceCache = device;
 
+        deviceCache.addEventListener('gattserverdisconnected', handleDisconnection);
+
         return deviceCache;
-    })
+    });
+}
+
+function handleDisconnection(event){
+    let device = event.target;
+
+    log('"' + device.name + '"bluetooth device disconnected, trying to reconnect...');
+
+    connectDeviceAndCacheCharacteristic(device).
+    then(characteristic => startNotifications(characteristic)).catch(error => log(error));
 }
 
 // Connect to the device specifed, get service and characteristic
@@ -74,6 +86,7 @@ function startNotifications(characterstic){
     return characteristic.startNotifications().
     then(() => {
         log('Notifications started');
+        characterstic.addEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
     });
 }
 
@@ -84,7 +97,48 @@ function log(data, type=''){
 
 // Disconnect from the connected device
 function disconnect() {
-    //
+    if(deviceCahce){
+        log('Disconnecting from"' + deviceCache.name + '" bluetooth device...');
+        deviceCache.removeEventListener('gattserverdisconnected', handleDisconnection);
+
+        if(deviceCahce.gatt.connected){
+            deviceCache.gatt.disconnect();
+            log('"'+ deviceCache.name + '" bluetooth dvice disconnected');
+        }
+        else{
+            log('"'+deviceCache.name+'" bluetooth device is already disconnected');
+        }
+    }
+    if(characteristicCache){
+
+        characteristicCache.removeEventListener('characteristicvaluechanged', handleCharacteristicValueChanged);
+        characteristicCache=null;
+    }
+
+    deviceCache=null;
+}
+
+// Data receiving
+function handleCharacteristicValueChanged(event) {
+    let value = new TextDecoder().decode(event.target.value);
+
+    for (let c of value) {
+        if (c === '\n') {
+            let data = readBuffer.trim();
+            readBuffer = '';
+
+            if (data) {
+                receive(data);
+            }
+        }
+        else {
+            readBuffer += c;
+        }
+    }
+}
+
+function receive(data){
+    log(data, 'in');
 }
 
 // Send data to the connected device
